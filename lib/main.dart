@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 void main() => runApp(const MyApp());
 
@@ -49,6 +51,48 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
   DateTime currentDate = DateTime.now();
   Gender? _gender = Gender.male;
   String? _bloodGroup;
+
+  Future getData() async {
+    // print("Inside Function");
+    // var url = Uri.parse('http://localhost:5000');
+    // var response = await http.get(url);
+    // var message = jsonDecode(response.body);
+    // print(message);
+
+    // var url = Uri.parse('https://jsonplaceholder.typicode.com/posts');
+    // final response = await http.get(url);
+    // var responseData = json.decode(response.body);
+    // print(responseData);
+
+    // var url = Uri.parse('http://192.168.1.114:5000');
+    var url = Uri.parse('http://localhost:5000');
+    final response = await http.get(url, headers: {
+      "Access-Control-Allow-Origin": "*",
+      "Accept": "application/json"
+    });
+
+    // String firstName = firstNameController.text;
+    // String middleName = middleNameController.text;
+    // String lastName = lastNameController.text;
+    // String bloodGroup = _bloodGroup.toString();
+    // String dateOfBirth = dateOfBirthController.text;
+    // String dateOfJoining = dateOfJoiningController.text;
+    // String gender = _gender.toString().split('.')[1];
+
+    // var data = {
+    //   'firstName': firstName,
+    //   'middleName': middleName,
+    //   'lastName': lastName,
+    //   'bloodGroup': bloodGroup,
+    //   'dateOfBirth': dateOfBirth,
+    //   'dateOfJoining': dateOfJoining,
+    //   'gender': gender
+    // };
+    // var response = await http.post(url, body: json.encode(data));
+    // var response = await http.post(url, body: json.encode(data));
+    var message = jsonDecode(response.body);
+    print(message);
+  }
 
   Future<void> dateOfBirth(BuildContext context) async {
     final DateTime? selectDOB = await showDatePicker(
@@ -237,20 +281,21 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                 child: ElevatedButton(
                   child: const Text('Submit'),
                   onPressed: () {
-                    // ignore_for_file: avoid_print
-                    print(firstNameController.text +
-                        " " +
-                        middleNameController.text +
-                        " " +
-                        lastNameController.text +
-                        " " +
-                        dateOfBirthController.text +
-                        " " +
-                        dateOfJoiningController.text +
-                        " " +
-                        _bloodGroup.toString() +
-                        " " +
-                        _gender.toString().split('.')[1]);
+                    getData();
+                    // ignore: avoid_print
+                    // print(firstNameController.text +
+                    //     " " +
+                    //     middleNameController.text +
+                    //     " " +
+                    //     lastNameController.text +
+                    //     " " +
+                    //     dateOfBirthController.text +
+                    //     " " +
+                    //     dateOfJoiningController.text +
+                    //     " " +
+                    //     _bloodGroup.toString() +
+                    //     " " +
+                    //     _gender.toString().split('.')[1]);
                   },
                 )),
           ],
