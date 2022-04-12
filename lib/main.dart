@@ -49,7 +49,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
   TextEditingController dateOfBirthController = TextEditingController();
   TextEditingController dateOfJoiningController = TextEditingController();
   DateTime currentDate = DateTime.now();
-  Gender? _gender = Gender.male;
+  Gender? _gender;
   String? _bloodGroup;
 
   Future getData() async {
@@ -66,40 +66,54 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
 
     // var url = Uri.parse('http://192.168.1.114:5000');
     var url = Uri.parse('http://localhost:5000');
-    final response = await http.get(url, headers: {
-      "Access-Control-Allow-Origin": "*",
-      "Accept": "application/json"
-    });
+    // final response = await http.get(url, headers: {
+    //   "Access-Control-Allow-Origin": "*",
+    //   "Accept": "application/json"
+    // });
 
-    // String firstName = firstNameController.text;
-    // String middleName = middleNameController.text;
-    // String lastName = lastNameController.text;
-    // String bloodGroup = _bloodGroup.toString();
-    // String dateOfBirth = dateOfBirthController.text;
-    // String dateOfJoining = dateOfJoiningController.text;
-    // String gender = _gender.toString().split('.')[1];
+    String firstName = firstNameController.text;
+    String middleName = middleNameController.text;
+    String lastName = lastNameController.text;
+    String bloodGroup = _bloodGroup.toString();
+    String dateOfBirth = dateOfBirthController.text;
+    String dateOfJoining = dateOfJoiningController.text;
+    String gender = _gender.toString().split('.')[1];
 
-    // var data = {
-    //   'firstName': firstName,
-    //   'middleName': middleName,
-    //   'lastName': lastName,
-    //   'bloodGroup': bloodGroup,
-    //   'dateOfBirth': dateOfBirth,
-    //   'dateOfJoining': dateOfJoining,
-    //   'gender': gender
-    // };
+    var data = {
+      'firstName': firstName,
+      'middleName': middleName,
+      'lastName': lastName,
+      'bloodGroup': bloodGroup,
+      'dateOfBirth': dateOfBirth,
+      'dateOfJoining': dateOfJoining,
+      'gender': gender
+    };
     // var response = await http.post(url, body: json.encode(data));
-    // var response = await http.post(url, body: json.encode(data));
+    var response = await http.post(url,
+        headers: {"content-type": "application/json"}, body: json.encode(data));
     var message = jsonDecode(response.body);
     print(message);
+
+    if (response.statusCode == 200) {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(const SnackBar(content: Text("Data inserted.")));
+      firstNameController.clear();
+      lastNameController.clear();
+      middleNameController.clear();
+      dateOfBirthController.clear();
+      dateOfJoiningController.clear();
+    } else {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(const SnackBar(content: Text("Try again.")));
+    }
   }
 
   Future<void> dateOfBirth(BuildContext context) async {
     final DateTime? selectDOB = await showDatePicker(
         context: context,
         initialDate: currentDate,
-        firstDate: DateTime(2015),
-        lastDate: DateTime(2050));
+        firstDate: DateTime(1950),
+        lastDate: currentDate);
     if (selectDOB != null && selectDOB != currentDate) {
       setState(() {
         var selectedDOB = selectDOB.toString();
@@ -112,8 +126,8 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
     final DateTime? selectDOJ = await showDatePicker(
         context: context,
         initialDate: currentDate,
-        firstDate: DateTime(2015),
-        lastDate: DateTime(2050));
+        firstDate: DateTime(1950),
+        lastDate: currentDate);
     if (selectDOJ != null && selectDOJ != currentDate) {
       setState(() {
         var selectedDOJ = selectDOJ.toString();
