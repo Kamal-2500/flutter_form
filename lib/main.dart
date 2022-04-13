@@ -1,7 +1,11 @@
+// ignore_for_file: avoid_print
+
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/data_table.dart';
 import 'dart:async';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'data_table.dart';
 
 void main() => runApp(const MyApp());
 
@@ -53,6 +57,28 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
   String? _bloodGroup;
 
   Future getData() async {
+    var url = Uri.parse('http://localhost:5000');
+
+    final response = await http.get(url, headers: {
+      "Access-Control-Allow-Origin": "*",
+      "Accept": "application/json"
+    });
+
+    var employeeData = json.decode(response.body);
+    print(employeeData);
+    print(employeeData.runtimeType);
+    print(employeeData.length);
+
+    for (var emp in employeeData) {
+      print(emp);
+    }
+
+    for (var i = 0; i < employeeData.length; i++) {
+      print(employeeData[0]);
+    }
+  }
+
+  Future submitForm() async {
     // print("Inside Function");
     // var url = Uri.parse('http://localhost:5000');
     // var response = await http.get(url);
@@ -91,7 +117,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
     // var response = await http.post(url, body: json.encode(data));
     var response = await http.post(url,
         headers: {"content-type": "application/json"}, body: json.encode(data));
-    var message = jsonDecode(response.body);
+    var message = response.body;
     print(message);
 
     if (response.statusCode == 200) {
@@ -290,29 +316,106 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
               ),
             ),
             Container(
-                height: 50,
-                padding: const EdgeInsets.fromLTRB(10, 1, 10, 10),
-                child: ElevatedButton(
-                  child: const Text('Submit'),
-                  onPressed: () {
-                    getData();
-                    // ignore: avoid_print
-                    // print(firstNameController.text +
-                    //     " " +
-                    //     middleNameController.text +
-                    //     " " +
-                    //     lastNameController.text +
-                    //     " " +
-                    //     dateOfBirthController.text +
-                    //     " " +
-                    //     dateOfJoiningController.text +
-                    //     " " +
-                    //     _bloodGroup.toString() +
-                    //     " " +
-                    //     _gender.toString().split('.')[1]);
-                  },
-                )),
+              height: 50,
+              padding: const EdgeInsets.fromLTRB(10, 1, 10, 10),
+              child: ElevatedButton(
+                child: const Text('Submit'),
+                onPressed: () {
+                  submitForm();
+                  // print(firstNameController.text +
+                  //     " " +
+                  //     middleNameController.text +
+                  //     " " +
+                  //     lastNameController.text +
+                  //     " " +
+                  //     dateOfBirthController.text +
+                  //     " " +
+                  //     dateOfJoiningController.text +
+                  //     " " +
+                  //     _bloodGroup.toString() +
+                  //     " " +
+                  //     _gender.toString().split('.')[1]);
+                },
+              ),
+            ),
+            Container(
+              height: 50,
+              padding: const EdgeInsets.fromLTRB(10, 1, 10, 10),
+              child: ElevatedButton(
+                child: const Text('Get Data'),
+                onPressed: () {
+                  _navigateToNextScreen(context);
+                  // print(firstNameController.text +
+                  //     " " +
+                  //     middleNameController.text +
+                  //     " " +
+                  //     lastNameController.text +
+                  //     " " +
+                  //     dateOfBirthController.text +
+                  //     " " +
+                  //     dateOfJoiningController.text +
+                  //     " " +
+                  //     _bloodGroup.toString() +
+                  //     " " +
+                  //     _gender.toString().split('.')[1]);
+                },
+              ),
+            ),
+            Container(
+              height: 50,
+              padding: const EdgeInsets.fromLTRB(10, 1, 10, 10),
+              child: DataTable(
+                columns: const <DataColumn>[
+                  DataColumn(
+                    label: Text(
+                      'Name',
+                      style: TextStyle(fontStyle: FontStyle.italic),
+                    ),
+                  ),
+                  DataColumn(
+                    label: Text(
+                      'Age',
+                      style: TextStyle(fontStyle: FontStyle.italic),
+                    ),
+                  ),
+                  DataColumn(
+                    label: Text(
+                      'Role',
+                      style: TextStyle(fontStyle: FontStyle.italic),
+                    ),
+                  ),
+                ],
+                rows: const <DataRow>[
+                  DataRow(
+                    cells: <DataCell>[
+                      DataCell(Text('Sarah')),
+                      DataCell(Text('19')),
+                      DataCell(Text('Student')),
+                    ],
+                  ),
+                  DataRow(
+                    cells: <DataCell>[
+                      DataCell(Text('Janine')),
+                      DataCell(Text('43')),
+                      DataCell(Text('Professor')),
+                    ],
+                  ),
+                  DataRow(
+                    cells: <DataCell>[
+                      DataCell(Text('William')),
+                      DataCell(Text('27')),
+                      DataCell(Text('Associate Professor')),
+                    ],
+                  ),
+                ],
+              ),
+            ),
           ],
         ));
   }
+}
+
+void _navigateToNextScreen(BuildContext context) {
+  Navigator.of(context)
+      .push(MaterialPageRoute(builder: (context) => TableFormat()));
 }
