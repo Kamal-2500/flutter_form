@@ -1,14 +1,18 @@
 class EmpDetails {
-  late int id;
-  late String fName;
-  late String mName;
-  late String lName;
-  late String gender;
-  late String bg;
-  late double salary;
+   int id;
+   String fName;
+   String mName;
+   String lName;
+   String gender;
+   String bg;
+   double salary;
 
-  EmpDetails(this.id, thisfName, this.mName, this.lName, this.gender, this.bg,
+  EmpDetails( this.id, thisfName, this.mName, this.lName, this.gender, this.bg,
       this.salary);
+
+  factory EmpDetails.fromJson(Map<String, dynamic> json) {
+    return EmpDetails(id, thisfName, mName, lName, gender, bg, salary)
+  }
 
   void setId(int id) {
     this.id = id;
